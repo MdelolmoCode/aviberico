@@ -2,7 +2,6 @@ package com.grajilla.aviberico.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.commons.lang3.builder.ToStringExclude;
 
 import java.time.LocalDateTime;
 
