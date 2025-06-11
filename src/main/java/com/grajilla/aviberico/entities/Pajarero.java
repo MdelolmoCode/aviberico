@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString(exclude = {"favoriteBird"})
+@ToString(exclude = {"favoriteBird", "birdSightings"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
