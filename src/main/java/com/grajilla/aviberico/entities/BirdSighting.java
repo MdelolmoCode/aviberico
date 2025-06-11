@@ -17,7 +17,10 @@ public class BirdSighting {
     @JoinColumn(name = "bird_id", nullable = false)
     private Bird bird;
 
-    // private Pajarero pajarero;
+    // MUCHOS avistamientos pueden ser del MISMO pajarero
+    @ManyToOne
+    @JoinColumn(name = "pajarero_id", nullable = false)
+    private Pajarero pajarero;
 
     private LocalDateTime dateTime;
 
