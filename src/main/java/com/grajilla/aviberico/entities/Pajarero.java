@@ -46,4 +46,11 @@ public class Pajarero { // entidad usuario
     // por defecto todos los usuarios son USER, no ADMIN
     @Builder.Default
     private UserRole role = UserRole.USER;
+
+    // UN pajarero puede tener MUCHOS avistamientos
+    // mappedBy indica que la relación está mapeada por el atributo "pajarero" en BirdSighting
+    // cascade = ALL significa qeu si borramos un pajarero, se borran todos sus avistamientos
+    @OneToMany(mappedBy = "pajarero", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<BirdSighting> birdSightings = new ArrayList<>();
 }
