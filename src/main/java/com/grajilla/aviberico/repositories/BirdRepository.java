@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface BirdRepository extends JpaRepository<Bird, Long> {
 
+    // buscar por nombre
+    List<Bird> findByCommonNameContainsIgnoreCase(String commonName);
+
     // buscar por familia
     List<Bird> findByFamily(String family);
 
