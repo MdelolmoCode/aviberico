@@ -24,9 +24,11 @@ public class BirdController {
 
         // obtener todas las aves de la base de datos
         List<Bird> birds = birdRepository.findAll();
+        List<String> familias = birdRepository.findDistinctFamilies();
 
         // pasar datos a la vista
         model.addAttribute("birds", birds);
+        model.addAttribute("familias", familias);
 
         return "bird/bird-list";
     }
