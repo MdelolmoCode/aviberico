@@ -13,7 +13,7 @@ public interface BirdRepository extends JpaRepository<Bird, Long> {
 
     // obtener familias únicas
     @Query("SELECT DISTINCT b.family FROM Bird b WHERE b.family IS NOT NULL ORDER BY b.family")
-    List<Bird> findDistinctFamilies();
+    List<String> findDistinctFamilies();
 
     /**
      * SELECT = SELECCIONAR/OBTENER
