@@ -18,6 +18,27 @@
         <i class="fa-solid fa-plus me-2"></i>Crear nueva ave
     </a>
 
+    <!-- FILTRAR POR FAMILIA -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title">
+                <i class="fa-solid fa-filter me-2"></i>Filtrar por familia:
+            </h3>
+            <div class="d-flex flex-wrap gap-2 mb-2">
+                <span th:each="familia : ${familias}">
+                    <a th:href="@{/birds/familia/{familyName}(familyName=${familia})}"
+                       th:text="${familia}"
+                       class="btn btn-outline-primary btn-sm">
+                        <i class="fa-solid fa-sitemap me-1"></i>
+                    </a>
+                </span>
+            </div>
+            <a th:href="@{/birds}" class="btn btn-outline-secondary btn-sm">
+                <i class="fa-solid fa-filter-circle-xmark me-1"></i>Limpiar filtros
+            </a>
+        </div>
+    </div>
+
     <div th:if="${error}" class="alert alert-danger" role="alert">
         <i class="fa-solid fa-triangle-exclamation me-1"></i>
         <span th:text="${error}"></span>
@@ -105,7 +126,7 @@
         <small class="text-muted">
 
             <i class="fa-solid fa-circle-exclamation me-1"></i>
-            Total de aves: <span th:text="${#lists.size(birds)+1}"></span>
+            Total de aves: <span th:text="${#lists.size(birds)}"></span>
         </small>
     </div>
 </div>
