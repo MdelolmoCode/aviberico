@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -64,5 +65,20 @@ public class BirdController {
         model.addAttribute("familiaFiltrada", familyName);
 
         return "bird/bird-list";
+    }
+
+    @GetMapping("/birds/{id}")
+    public String findById(Model model, @PathVariable Long id) {
+        // buscar ave por id
+        Optional<Bird> birdOpt = birdRepository.findById(id);
+
+        // verificar si el ave existe
+        if (birdOpt.isPresent()) {
+            model.addAttribute("bird", birdOpt.get());
+        } else {
+            model.addAttribute("error", "Ave no encontrada");
+        }
+
+        return "bird/bird-detail";
     }
 }
