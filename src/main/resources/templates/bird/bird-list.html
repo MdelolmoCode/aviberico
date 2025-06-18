@@ -102,15 +102,15 @@
                        minlength="3"
                        class="form-control">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fa-solid fa-magnifying-glass"></i>Buscar
+                    <i class="fa-solid fa-magnifying-glass me-2"></i>Buscar
                 </button>
                 <a th:href="@{/birds}" class="btn btn-secondary">
-                    <i class="fa-solid fa-eraser"></i>Limpiar
+                    <i class="fa-solid fa-eraser me-2"></i>Limpiar
                 </a>
             </form>
 
             <div th:if="${busquedaActual}" class="alert alert-info">
-                <i class="fa-solid fa-circle-info"></i>
+                <i class="fa-solid fa-circle-info me-2"></i>
                 <span>Resultados de búsqueda para: "<strong th:text="${busquedaActual}"></strong>"</span>
             </div>
         </div>
@@ -177,7 +177,7 @@
                     <div th:unless="${bird.image != null}">
                         <div class="bg-light border rounded d-flex align-items-center justify-content-center"
                              style="width: 55px; height: 55px;">
-                            <i class="fa-solid fa-image text-muted"></i>
+                            <i class="fa-solid fa-image text-body-secondary"></i>
                         </div>
                     </div>
                 </td>
@@ -225,8 +225,7 @@
     </div>
 
     <div th:unless="${birds.isEmpty()}">
-        <small class="text-muted">
-
+        <small class="text-body-secondary">
             <i class="fa-solid fa-circle-exclamation me-1"></i>
             Total de aves: <span th:text="${#lists.size(birds)}"></span>
         </small>
