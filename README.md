@@ -70,3 +70,8 @@ Creado por:
 ### UserRole [enum] (Rol de usuario)
 - ADMIN (administrador)
 - USER (user)
+
+
+## Presentación en Google Slides
+- Modo vista: https://docs.google.com/presentation/d/18jPYYJ7bFsWOB0NWUe4bx97zo3KSAOvkzYbsRK7wXUk/edit?usp=sharing
+- Modo edición: https://docs.google.com/presentation/d/1LjQecT6RkbyaqytGOPc1oFjkP8qv1D4Bfy7sWG52g-g/edit?usp=sharing
