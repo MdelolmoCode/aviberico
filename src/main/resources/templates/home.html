@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>🐦‍⬛ Avibérico</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}">
+
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #8ba728 0%, #20a1c9 100%);
+            color: white;
+            padding: 4rem 0;
+        }
+
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .bird-card {
+            transition: transform 0.2s ease;
+            height: 100%;
+        }
+
+        .bird-card:hover {
+            transform: scale(1.05);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<!-- hero section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fa-solid fa-binoculars me-3"></i>
+                    Bienvenido a Avibérico
+                </h1>
+                <p class="lead mb-4">
+                    Descubre, registra y explora la fascinante avifauna ibérica.
+                    Tu portal completo para el avistamiento y catalogación de aves.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a th:href="@{/birds}" class="btn btn-light btn-lg">
+                        <i class="fa-solid fa-crow me-2"></i>
+                        Explorar aves
+                    </a>
+                    <a th:href="@{/bird/new}" class="btn btn-outline-light btn-lg">
+                        <i class="fa-solid fa-plus me-2"></i>
+                        Registrar nueva ave
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fa-solid fa-crow fa-bounce display-1"></i>
+                <i class="fa-solid fa-egg display-5"></i>
+                <i class="fa-solid fa-crow display-2 fa-flip-horizontal"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- estadísticas -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-crow text-danger feature-icon"></i>
+                        <h3 class="fw-bold text-danger" th:text="${totalBirds}">0</h3>
+                        <p class="text-body-secondary mb-0">Especies registradas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-eye text-info feature-icon"></i>
+                        <h3 class="fw-bold text-info" th:text="${totalSightings}">0</h3>
+                        <p class="text-body-secondary mb-0">Avistamientos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-users text-warning feature-icon"></i>
+                        <h3 class="fw-bold text-warning" th:text="${totalUsers}">0</h3>
+                        <p class="text-body-secondary mb-0">Pajareros</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-tree text-success feature-icon"></i>
+                        <h3 class="fw-bold text-success" th:text="${totalHabitats}">0</h3>
+                        <p class="text-body-secondary mb-0">Hábitats</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- aves destacadas -->
+<section class="py-5" th:if="${latestBirds != null and !latestBirds.isEmpty()}">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="fw-bold text-dark">
+                    <i class="fa-solid fa-star text-warning me-2"></i>
+                    Aves destacadas
+                </h2>
+                <p class="text-body-secondary">Descubre algunas de las especies más recientes en nuestra base de datos</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4" th:each="bird : ${latestBirds}">
+                <div class="card bird-card border-0 shadow-sm">
+                    <!-- imagen -->
+                    <div th:if="${bird.image != null}" class="position-relative">
+                        <img th:src="${bird.image.imgUrl}"
+                             th:alt="${bird.image.altText != null ? bird.image.altText : bird.commonName}"
+                             class="card-img-top"
+                             style="height: 200px; object-fit: cover;">
+                    </div>
+                    <div th:unless="${bird.image != null}"
+                         class="bg-light d-flex align-items-center justify-content-center"
+                         style="height: 200px;">
+                        <i class="fa-solid fa-image text-body-secondary display-4"></i>
+                    </div>
+
+                    <!-- información -->
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${bird.commonName}">Nombre del ave</h5>
+
+                        <!-- nombre científico -->
+                        <p class="text-body-secondary small mb-2"
+                           th:if="${bird.genus != null and bird.species != null}">
+                            <i class="fa-solid fa-dna me-1"></i>
+                            <em th:text="${bird.genus + ' ' + #strings.toLowerCase(bird.species)}"></em>
+                        </p>
+
+                        <!-- familia -->
+                        <p class="text-body-secondary small mb-3" th:if="${bird.family != null}">
+                            <i class="fa-solid fa-sitemap me-1"></i>
+                            Familia: <span th:text="${bird.family}"></span>
+                        </p>
+
+                        <!-- botón ver detalles -->
+                        <a th:href="@{/birds/{id}(id=${bird.id})}"
+                           class="btn btn-primary btn-sm">
+                            <i class="fa-solid fa-eye me-1"></i>Ver detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a th:href="@{/birds}" class="btn btn-outline-primary">
+                <i class="fa-solid fa-list me-2"></i>
+                Ver todas las aves
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- familias principales -->
+<section class="py-5 bg-light" th:if="${topFamilies != null and !topFamilies.isEmpty()}">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="fw-bold text-dark">
+                    <i class="fa-solid fa-sitemap text-success me-2"></i>
+                    Familias principales
+                </h2>
+                <p class="text-body-secondary">Explora las diferentes familias de aves registradas</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <a th:each="familia : ${topFamilies}"
+                       th:href="@{/birds/familia/{familyName}(familyName=${familia})}"
+                       th:text="${familia}"
+                       class="btn btn-outline-success btn-lg">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- accesos rápidos -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="fw-bold text-dark">
+                    <i class="fa-solid fa-bolt text-primary me-2"></i>
+                    Accesos rápidos
+                </h2>
+                <p class="text-body-secondary">Funcionalidades principales del sistema</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-sm h-100 text-center">
+                    <div class="card-body">
+                        <i class="fa-solid fa-search text-primary feature-icon"></i>
+                        <h5 class="card-title">Buscar aves</h5>
+                        <p class="card-text text-body-secondary">
+                            Encuentra especies por nombre común, familia o características específicas.
+                        </p>
+                        <a th:href="@{/birds}" class="btn btn-primary">
+                            <i class="fa-solid fa-magnifying-glass me-1"></i>Buscar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-sm h-100 text-center">
+                    <div class="card-body">
+                        <i class="fa-solid fa-plus-circle text-success feature-icon"></i>
+                        <h5 class="card-title">Registrar ave</h5>
+                        <p class="card-text text-body-secondary">
+                            Añade nuevas especies a nuestra base de datos con información detallada.
+                        </p>
+                        <a th:href="@{/bird/new}" class="btn btn-success">
+                            <i class="fa-solid fa-plus me-1"></i>Registrar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-sm h-100 text-center">
+                    <div class="card-body">
+                        <i class="fa-solid fa-eye text-info feature-icon"></i>
+                        <h5 class="card-title">Avistamientos</h5>
+                        <p class="card-text text-body-secondary">
+                            Consulta y registra avistamientos de aves en diferentes ubicaciones.
+                        </p>
+                        <a th:href="@{/sightings}" class="btn btn-info">
+                            <i class="fa-solid fa-list me-1"></i>Ver avistamientos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
