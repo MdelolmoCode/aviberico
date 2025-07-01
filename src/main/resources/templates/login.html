@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>🐦‍⬛ Iniciar sesión - Avibérico</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}">
+</head>
+<body class="bg-light d-flex align-items-center min-vh-100">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mt-1"><i class="fa-solid fa-crow me-2"></i>Avibérico</h4>
+                    <p class="mb-0">Iniciar sesión</p>
+                </div>
+                <div class="card-body">
+
+                    <!-- mensajes de error/éxito -->
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                        Usuario o contraseña incorrectos
+                    </div>
+
+                    <div th:if="${param.logout}" class="alert alert-success">
+                        <i class="fa-solid fa-check-circle me-2"></i>
+                        Has cerrado sesión correctamente
+                    </div>
+
+                    <!-- formulario -->
+                    <form th:action="@{/login}" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="fa-solid fa-user me-2"></i>Usuario
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="username"
+                                   name="username"
+                                   required
+                                   autofocus>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fa-solid fa-lock me-2"></i>Contraseña
+                            </label>
+                            <input type="password"
+                                   class="form-control"
+                                   id="password"
+                                   name="password"
+                                   required>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   id="remember-me"
+                                   name="remember-me">
+                            <label class="form-check-label" for="remember-me">
+                                Recordarme
+                            </label>
+                        </div>
+
+                        <div class="mb-3 text-center">
+                            <a th:href="@{/forgot-password}" class="text-decoration-none text-success">
+                                ¿Has olvidado la contraseña?
+                            </a>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fa-solid fa-sign-in-alt me-2"></i>Iniciar sesión
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <a th:href="@{/}" class="btn btn-link">
+                        <i class="fa-solid fa-arrow-left me-2"></i>Volver al inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
