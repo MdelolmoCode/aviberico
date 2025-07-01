@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${bird.id != null ? 'Editar ave - ' + bird.commonName : 'Nueva ave'}">Formulario de ave</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}">
+</head>
+<body>
+
+<!-- navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <!-- navegación -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a th:href="@{/birds}" class="text-decoration-none">
+                    <i class="fas fa-list me-1"></i>Lista de aves
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="fas fa-edit me-1" th:if="${bird.id != null}"></i>
+                <i class="fas fa-plus me-1" th:unless="${bird.id != null}"></i>
+                <span th:text="${bird.id != null ? 'Editar' : 'Nueva ave'}"></span>
+            </li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="fas fa-edit me-2 text-warning" th:if="${bird.id != null}"></i>
+            <i class="fas fa-plus me-2 text-success" th:unless="${bird.id != null}"></i>
+            <span th:text="${bird.id != null ? 'Editar ave' : 'Nueva ave'}"></span>
+        </h1>
+        <a th:href="@{/birds}" class="btn btn-secondary">
+            <i class="fas fa-times me-1"></i>Cancelar
+        </a>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/birds}"
+          th:object="${bird}"
+          method="post">
+
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="row">
+            <!-- columna izquierda -->
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Información básica
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- nombre común -->
+                        <div class="mb-3">
+                            <label for="commonName" class="form-label">
+                                <i class="fas fa-dove me-1"></i>Nombre común *
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="commonName"
+                                   th:field="*{commonName}"
+                                   placeholder="Ej: Gorrión común"
+                                   required>
+                        </div>
+
+                        <!-- género y especie -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="genus" class="form-label">
+                                    <i class="fas fa-dna me-1"></i>Género
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="genus"
+                                       th:field="*{genus}"
+                                       placeholder="Ej: Passer">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="species" class="form-label">
+                                    <i class="fas fa-leaf me-1"></i>Especie
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="species"
+                                       th:field="*{species}"
+                                       placeholder="Ej: Domesticus">
+                            </div>
+                        </div>
+
+                        <!-- familia y orden -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="family" class="form-label">
+                                    <i class="fas fa-sitemap me-1"></i>Familia
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="family"
+                                       th:field="*{family}"
+                                       placeholder="Ej: Passeridae">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="order" class="form-label">
+                                    <i class="fas fa-layer-group me-1"></i>Orden
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="order"
+                                       th:field="*{order}"
+                                       placeholder="Ej: Passeriformes">
+                            </div>
+                        </div>
+
+                        <!-- estado de conservación -->
+                        <div class="mb-3">
+                            <label for="conservationStatus" class="form-label">
+                                <i class="fas fa-shield-alt me-1"></i>Estado de conservación
+                            </label>
+                            <select class="form-select" id="conservationStatus" th:field="*{conservationStatus}">
+                                <option value="">-- Seleccionar --</option>
+                                <option th:each="status : ${T(com.grajilla.aviberico.enums.ConservationStatus).values()}"
+                                        th:value="${status}"
+                                        th:text="${status.displayName}"></option>
+                            </select>
+                        </div>
+
+                        <!-- descripción -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-align-left me-1"></i>Descripción
+                            </label>
+                            <textarea class="form-control"
+                                      id="description"
+                                      th:field="*{description}"
+                                      rows="4"
+                                      maxlength="1000"
+                                      placeholder="Describe las características del ave..."></textarea>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>Máximo 1000 caracteres
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- columna derecha -->
+            <div class="col-lg-6">
+                <!-- imagen -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-image me-2"></i>Imagen
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- mostrar imagen actual si existe -->
+                        <div th:if="${bird.image != null}" class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-eye me-1"></i>Imagen actual:
+                            </label>
+                            <div class="text-center">
+                                <img th:src="${bird.image.imgUrl}"
+                                     th:alt="${bird.image.altText}"
+                                     class="img-fluid rounded"
+                                     style="max-height: 200px; object-fit: cover;">
+                            </div>
+                        </div>
+
+                        <!-- url de imagen -->
+                        <div class="mb-3">
+                            <label for="newImageUrl" class="form-label">
+                                <i class="fas fa-link me-1"></i>URL de la imagen
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="newImageUrl"
+                                   name="newImageUrl"
+                                   th:value="${bird.image != null ? bird.image.imgUrl : ''}"
+                                   placeholder="https://ejemplo.com/imagen.jpg">
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>Deja vacío si no quieres imagen
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- hábitats -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-tree me-2"></i>Hábitats
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${not #lists.isEmpty(habitats)}">
+                            <h6 class="mb-3 text-primary">
+                                <i class="fas fa-check-square me-1"></i>Seleccionar hábitats
+                            </h6>
+                            <div class="row">
+                                <div th:each="habitat : ${habitats}" class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               th:id="'habitat-' + ${habitat.id}"
+                                               name="habitatIds"
+                                               th:value="${habitat.id}"
+                                               th:checked="${bird.habitats != null and bird.habitats.contains(habitat)}">
+                                        <label class="form-check-label" th:for="'habitat-' + ${habitat.id}">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            <strong th:text="${habitat.name}"></strong>
+                                            <br>
+                                            <small class="text-body-secondary" th:if="${habitat.description}" th:text="${habitat.description}"></small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${#lists.isEmpty(habitats)}" class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>No hay hábitats disponibles</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-center gap-3 my-4">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save me-2" th:if="${bird.id != null}"></i>
+                        <i class="fas fa-plus me-2" th:unless="${bird.id != null}"></i>
+                        <span th:text="${bird.id != null ? 'Actualizar ave' : 'Crear ave'}"></span>
+                    </button>
+                    <a th:href="@{/birds}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

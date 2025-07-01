@@ -1,17 +1,17 @@
 package com.grajilla.aviberico.controllers;
 
-import com.grajilla.aviberico.entities.Bird;
-import com.grajilla.aviberico.repositories.BirdRepository;
+import com.grajilla.aviberico.entities.*;
+import com.grajilla.aviberico.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,6 +19,10 @@ import java.util.Optional;
 public class BirdController {
 
     private final BirdRepository birdRepository;
+    private final HabitatRepository habitatRepository;
+    private final ImageRepository imageRepository;
+    private final BirdSightingRepository birdSightingRepository;
+    private final PajareroRepository pajareroRepository;
 
     @GetMapping("/birds")
     public String findAll(Model model) {
@@ -80,5 +84,82 @@ public class BirdController {
         }
 
         return "bird/bird-detail";
+    }
+
+    @GetMapping("/bird/new")
+    public String showCreateForm(Model model) {
+        // Crear objeto ave vacío para el formulario
+        model.addAttribute("bird", new Bird());
+        // Cargar todos los hábitats disponibles para seleccionar
+        model.addAttribute("habitats", habitatRepository.findAll());
+
+        // Mostrar formulario de creación
+        return "bird/bird-form";
+    }
+
+    @GetMapping("/birds/{id}/edit")
+    public String showEditForm(Model model, @PathVariable Long id) {
+        Optional<Bird> birdOpt = birdRepository.findById(id);
+
+        if (birdOpt.isPresent()) {
+            model.addAttribute("bird", birdOpt.get());
+            model.addAttribute("habitats", habitatRepository.findAll());
+        } else {
+            model.addAttribute("error", "Ave no encontrada");
+        }
+
+        return "bird/bird-form";
+    }
+
+    @PostMapping("/birds")
+    public String saveForm(@ModelAttribute Bird bird,
+                           @RequestParam(required = false) String newImageUrl,
+                           @RequestParam(required = false) List<Long> habitatIds) {
+
+        if (newImageUrl != null && !newImageUrl.trim().isEmpty()) {
+            Image image = new Image();
+            image.setImgUrl(newImageUrl);
+            imageRepository.save(image);
+            bird.setImage(image);
+        }
+
+        if (habitatIds != null) {
+            Set<Habitat> habitats = new HashSet<>();
+            habitatIds.forEach(id ->
+                    habitatRepository.findById(id).ifPresent(habitats::add)
+            );
+            bird.setHabitats(habitats);
+        }
+
+        birdRepository.save(bird);
+        return "redirect:/birds";
+    }
+
+    @PostMapping("/birds/{id}/delete")
+    public String delete(@PathVariable Long id) {
+        // Buscar ave a eliminar
+        Optional<Bird> birdOpt = birdRepository.findById(id);
+
+        if (birdOpt.isPresent()) {
+            Bird bird = birdOpt.get();
+
+            List<BirdSighting> sightings = birdSightingRepository.findByBird_Id(id);
+            birdSightingRepository.deleteAll(sightings);
+
+            List<Pajarero> pajareros = pajareroRepository.findAll();
+            pajareros.forEach(p -> {
+                if (p.getFavoriteBird() != null && p.getFavoriteBird().getId().equals(id)) {
+                    p.setFavoriteBird(null);
+                    pajareroRepository.save(p);
+                }
+            });
+
+            bird.getHabitats().clear();
+            birdRepository.save(bird);
+
+            birdRepository.deleteById(id);
+        }
+
+        return "redirect:/birds";
     }
 }
